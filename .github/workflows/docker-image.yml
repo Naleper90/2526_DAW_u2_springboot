@@ -40,8 +40,8 @@ jobs:
       - name: 3. Iniciar sesión en Docker Hub
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.SesioDocker }}
-          password: ${{ secrets.SesionToken }}
+          username: ${{ secrets.SESIONDOCKER }}
+          password: ${{ secrets.SESIONTOKEN }}
 
       - name: 4. Definir Tags (latest y SHA)
         id: meta
