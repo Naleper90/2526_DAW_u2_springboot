@@ -58,3 +58,6 @@ La imagen está lista para ser desplegada en cualquier entorno compatible con Do
 <img width="1918" height="1032" alt="image" src="https://github.com/user-attachments/assets/b2882920-506f-4c7e-ac58-2e814702639a" />
 
 
+## Autor
+
+Natalia Alejo Pérez - 2º DAW
