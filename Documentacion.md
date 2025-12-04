@@ -51,3 +51,10 @@ La imagen está lista para ser desplegada en cualquier entorno compatible con Do
 
 🔗 **Enlace al Repositorio de Imágenes:**  
 [https://hub.docker.com/repositories/esanatyoe](https://hub.docker.com/repositories/esanatyoe)
+
+## 4. Evidencias
+
+<img width="1918" height="1028" alt="image" src="https://github.com/user-attachments/assets/b8acf3d0-b5a0-4017-9587-f36c610f97f8" />
+<img width="1918" height="1032" alt="image" src="https://github.com/user-attachments/assets/b2882920-506f-4c7e-ac58-2e814702639a" />
+
+
