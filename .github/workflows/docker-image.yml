@@ -1,44 +1,19 @@
-name: CI con AutoCommit y Docker Publish
+name: CI/CD - Docker Build and Publish
 
 on:
+
   push:
     branches: [ "master" ] 
   workflow_dispatch:
 
 permissions:
-  contents: write 
+  contents: read 
 
 env:
-  DOCKER_IMAGE: 'Naleper90/proyecto1' 
+  DOCKER_IMAGE: 'esanatyoe/proyecto1' 
 
 jobs:
-
-  test-and-update:
-    runs-on: ubuntu-latest
-    
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-
-      - name: Configurar Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
-
-      - name: Instalar dependencias
-        run: pip install pytest
-
-      - name: Ejecutar script de tests y actualizar README
-        run: python update_readme.py
-
-      - name: Commit automático del README
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: "Update README con estado de tests"
-          file_pattern: README.md
-
   build-and-publish-docker:
-    needs: test-and-update
     runs-on: ubuntu-latest
     
     permissions:
@@ -55,18 +30,18 @@ jobs:
           NEW_TITLE="Gestión de usuarios: Natalia Alejo Pérez - Commit: ${{ github.sha }}"
           
           if [ -f "$TITLE_FILE" ]; then
-            # El comando 'sed' funciona en el runner de Ubuntu
             sed -i 's|<title>.*</title>|<title>'"$NEW_TITLE"'</title>|g' "$TITLE_FILE"
             echo "Título de la página cambiado en $TITLE_FILE."
           else
-            echo "Advertencia: No se encontró el archivo del título en $TITLE_FILE."
+            echo "Advertencia: No se encontró el archivo del título en $TITLE_FILE. Continuando sin modificar."
           fi
           
+
       - name: 3. Iniciar sesión en Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.esanatyoe }}
-          password: ${{ secrets.dckr_pat_MjLSx4TDovOkOPGQkmdkMfvPlKI }} 
+          password: ${{ secrets.dckr_pat_MjLSx4TDovOkOPGQkmdkMfvPlKI  }} 
 
       - name: 4. Definir Tags (latest y SHA)
         id: meta
@@ -84,11 +59,10 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-
-      - name: 6. Documentar los cambios y Comando de Despliegue
+          
+      - name: 6. Documentar los cambios y Comando de Desplie
         run: |
-          echo "--- DOCUMENTACIÓN ---"
-          echo "La imagen se publicó con éxito con el hash de commit: ${{ github.sha }}"
-          echo "La imagen incluye el nuevo título de la página."
+          echo "--- DOCUMENTACIÓN FINAL ---"
+          echo "La imagen se publicó con éxito en Docker Hub con el hash: ${{ github.sha }}"
           echo "Comando para despliegue:"
           echo "docker run -d -p 8080:8080 ${{ env.DOCKER_IMAGE }}:latest"
