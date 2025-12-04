@@ -2,6 +2,13 @@
 
 Aplicación web educativa que demuestra cómo desarrollar y desplegar una aplicación Spring Boot utilizando Docker. Este proyecto está diseñado para el módulo de "Despliegue de Aplicaciones Web".
 
+## 📚 Documentación Técnica
+Puedes consultar el detalle completo del flujo CI/CD y el despliegue en la documentación oficial del proyecto:
+
+👉 [Ver Documentación del Despliegue (CI/CD)](Documentacion.md)
+
+Realizado por Natalia Alejo Pérez 2º DAW
+
 ## 📑 Tabla de Contenidos
 
 - [Características](#características)
