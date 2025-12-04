@@ -2,7 +2,7 @@ name: CI con AutoCommit y Docker Publish
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "master" ] 
   workflow_dispatch:
 
 permissions:
@@ -12,11 +12,13 @@ env:
   DOCKER_IMAGE: 'Naleper90/proyecto1' 
 
 jobs:
+
   test-and-update:
     runs-on: ubuntu-latest
+    
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4 
+        uses: actions/checkout@v4
 
       - name: Configurar Python
         uses: actions/setup-python@v5
@@ -36,7 +38,7 @@ jobs:
           file_pattern: README.md
 
   build-and-publish-docker:
-    needs: test-and-update 
+    needs: test-and-update
     runs-on: ubuntu-latest
     
     permissions:
@@ -47,16 +49,17 @@ jobs:
       - name: 1. Checkout del código
         uses: actions/checkout@v4
 
-      - name: 2. Modificar el título de la página (¡Ajusta la ruta!)
+      - name: 2. Modificar el título de la página
         run: |
-          TITLE_FILE="src\main\resources\templates\index.html" 
-          NEW_TITLE="Aplicación Desplegada - Commit: ${{ github.sha }}"
+          TITLE_FILE="src/main/resources/templates/index.html" 
+          NEW_TITLE="Gestión de usuarios: Natalia Alejo Pérez - Commit: ${{ github.sha }}"
           
           if [ -f "$TITLE_FILE" ]; then
+            # El comando 'sed' funciona en el runner de Ubuntu
             sed -i 's|<title>.*</title>|<title>'"$NEW_TITLE"'</title>|g' "$TITLE_FILE"
             echo "Título de la página cambiado en $TITLE_FILE."
           else
-            echo "Advertencia: No se encontró el archivo del título en $TITLE_FILE. Por favor, ajusta la ruta."
+            echo "Advertencia: No se encontró el archivo del título en $TITLE_FILE."
           fi
           
       - name: 3. Iniciar sesión en Docker Hub
