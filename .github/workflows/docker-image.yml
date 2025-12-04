@@ -1,33 +1,13 @@
-name: CI con AutoCommit
-
-on:
-  push:
-    branches: [ "main" ]
-  workflow_dispatch:
-
-permissions:
-  contents: write 
-
+name: Párctica Natalia
+run-name: ${{ github.actor }} is learning GitHub Actions
+on: [push]
 jobs:
-  test-and-update:
+  check-bats-version:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
-
-      - name: Configurar Python
-        uses: actions/setup-python@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
         with:
-          python-version: '3.10'
-
-      - name: Instalar dependencias
-        run: pip install pytest
-
-      - name: Ejecutar script de tests y actualizar README
-        run: python update_readme.py
-
-      - name: Commit automático del README
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: "Update README con estado de tests"
-          file_pattern: README.md
+          node-version: '20'
+      - run: npm install -g bats
+      - run: bats -v
