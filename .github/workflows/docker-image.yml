@@ -49,8 +49,7 @@ jobs:
 
       - name: 2. Modificar el título de la página (¡Ajusta la ruta!)
         run: |
-          # **¡VERIFICA Y AJUSTA ESTA RUTA!**
-          TITLE_FILE="C:\Users\esana\Desktop\2DAW\2526_DAW_u2_springboot\src\main\resources\templates\index.html" 
+          TITLE_FILE="src\main\resources\templates\index.html" 
           NEW_TITLE="Aplicación Desplegada - Commit: ${{ github.sha }}"
           
           if [ -f "$TITLE_FILE" ]; then
