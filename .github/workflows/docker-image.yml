@@ -1,4 +1,4 @@
-name: CI con AutoCommit
+name: CI con AutoCommit y Docker Publish
 
 on:
   push:
@@ -6,18 +6,20 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write   
+  contents: write 
 
+env:
+  DOCKER_IMAGE: 'Naleper90/proyecto1' 
 
 jobs:
   test-and-update:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4 
 
       - name: Configurar Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.10'
 
@@ -32,3 +34,59 @@ jobs:
         with:
           commit_message: "Update README con estado de tests"
           file_pattern: README.md
+
+  build-and-publish-docker:
+    needs: test-and-update 
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: read 
+      packages: write 
+
+    steps:
+      - name: 1. Checkout del código
+        uses: actions/checkout@v4
+
+      - name: 2. Modificar el título de la página (¡Ajusta la ruta!)
+        run: |
+          # **¡VERIFICA Y AJUSTA ESTA RUTA!**
+          TITLE_FILE="C:\Users\esana\Desktop\2DAW\2526_DAW_u2_springboot\src\main\resources\templates\index.html" 
+          NEW_TITLE="Aplicación Desplegada - Commit: ${{ github.sha }}"
+          
+          if [ -f "$TITLE_FILE" ]; then
+            sed -i 's|<title>.*</title>|<title>'"$NEW_TITLE"'</title>|g' "$TITLE_FILE"
+            echo "Título de la página cambiado en $TITLE_FILE."
+          else
+            echo "Advertencia: No se encontró el archivo del título en $TITLE_FILE. Por favor, ajusta la ruta."
+          fi
+          
+      - name: 3. Iniciar sesión en Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }} 
+
+      - name: 4. Definir Tags (latest y SHA)
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.DOCKER_IMAGE }}
+          tags: |
+            type=sha,format=short 
+            type=raw,value=latest
+            
+      - name: 5. Construir y Publicar la imagen Docker
+        uses: docker/build-push-action@v5
+        with:
+          context: . 
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+      - name: 6. Documentar los cambios y Comando de Despliegue
+        run: |
+          echo "--- DOCUMENTACIÓN ---"
+          echo "La imagen se publicó con éxito con el hash de commit: ${{ github.sha }}"
+          echo "La imagen incluye el nuevo título de la página."
+          echo "Comando para despliegue:"
+          echo "docker run -d -p 8080:8080 ${{ env.DOCKER_IMAGE }}:latest"
